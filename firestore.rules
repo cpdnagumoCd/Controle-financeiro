@@ -1,0 +1,67 @@
+rules_version = '2';
+
+// Regras do Controle Financeiro (CD 1 = 501 / CD 2 = 507).
+// Cole este conteúdo em: Firebase Console > Firestore Database > Regras > Publicar.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function logado() { return request.auth != null; }
+    function caminhoUsuario() { return /databases/$(database)/documents/usuarios/$(request.auth.uid); }
+    function perfil() { return get(caminhoUsuario()).data; }
+    function ativo() { return logado() && exists(caminhoUsuario()) && perfil().ativo == true; }
+    function admin() { return ativo() && perfil().admin == true; }
+    function podeEmpresa(emp) { return ativo() && (perfil().admin == true || emp in perfil().empresas); }
+    function jaConfigurado() { return exists(/databases/$(database)/documents/config/setup); }
+
+    // Documento que marca que o 1º administrador já foi criado (lido antes do login).
+    match /config/setup {
+      allow get: if true;
+      allow create: if logado() && !jaConfigurado()
+                    && getAfter(caminhoUsuario()).data.admin == true;
+      allow update, delete: if false;
+    }
+
+    // Perfis de acesso.
+    match /usuarios/{uid} {
+      allow get: if logado() && (request.auth.uid == uid || admin());
+      allow list: if admin();
+      // 1º administrador (tela de configuração inicial) ou administrador criando usuários
+      allow create: if (logado() && request.auth.uid == uid && !jaConfigurado()
+                        && request.resource.data.admin == true && request.resource.data.ativo == true)
+                    || admin();
+      allow update: if admin();
+      allow delete: if admin() && request.auth.uid != uid;
+    }
+
+    // Lançamentos: um documento por empresa e mês, id "507_2026-08".
+    match /meses/{mesId} {
+      function empDoId() { return int(mesId.split('_')[0]); }
+      function mesDoId() { return mesId.split('_')[1]; }
+      function formatoOk() {
+        return request.resource.data.empresa == empDoId()
+            && request.resource.data.mes == mesDoId()
+            && request.resource.data.itens is map;
+      }
+      // Não-administradores não podem apagar lançamentos...
+      function semRemocao() {
+        return request.resource.data.itens.keys().hasAll(resource.data.itens.keys());
+      }
+      // ...exceto ao mover um lançamento para outro mês (data alterada), no mesmo CD.
+      function movimentoValido() {
+        let removidos = resource.data.itens.keys().removeAll(request.resource.data.itens.keys());
+        let destino = request.resource.data.movidoPara;
+        return removidos.size() == 1
+            && destino is string
+            && int(destino.split('_')[0]) == empDoId()
+            && removidos[0] in getAfter(/databases/$(database)/documents/meses/$(destino)).data.itens;
+      }
+
+      allow get: if podeEmpresa(empDoId());
+      allow list: if podeEmpresa(resource.data.empresa);
+      allow create: if podeEmpresa(empDoId()) && formatoOk();
+      allow update: if podeEmpresa(empDoId()) && formatoOk()
+                    && (admin() || semRemocao() || movimentoValido());
+      allow delete: if admin();
+    }
+  }
+}
