@@ -239,6 +239,14 @@ button.badge:hover { filter: brightness(.95); outline: 1.5px solid currentColor;
 
 /* ============ Tabelas ============ */
 .table-wrap { overflow-x: auto; }
+/* listas longas rolam dentro da caixa (cabeçalho e total fixos), sem esticar a página */
+.table-scroll { overflow: auto; max-height: max(340px, calc(100vh - 290px)); overscroll-behavior: contain; scrollbar-color: #9fb0c5 #eef2f7; }
+.table-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+.table-scroll::-webkit-scrollbar-track { background: #eef2f7; }
+.table-scroll::-webkit-scrollbar-thumb { background: #9fb0c5; border-radius: 6px; border: 2px solid #eef2f7; }
+.table-scroll::-webkit-scrollbar-thumb:hover { background: var(--navy-600); }
+.table-scroll .t th { z-index: 2; }
+.table-scroll .t tfoot td { position: sticky; bottom: 0; z-index: 2; }
 table.t { width: 100%; border-collapse: separate; border-spacing: 0; }
 .t th {
   position: sticky; top: 0; background: var(--navy); color: #fff; text-align: left; font-size: 12px; font-weight: 700;
@@ -369,7 +377,8 @@ table.t { width: 100%; border-collapse: separate; border-spacing: 0; }
   .print-head div { text-align: right; color: var(--navy); font-weight: 700; }
   .t th, .t tfoot td, .hero, .hero-split > div { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .fluxo-grid { grid-template-columns: 1fr 1fr 1fr; }
-  .t th { position: static; }
+  .t th, .table-scroll .t tfoot td { position: static; }
+  .table-scroll { max-height: none; overflow: visible; }
 }
 
 </style>
@@ -1694,7 +1703,7 @@ async function carregarLista() {
   if (!lista) return;
   lista.classList.add("loading");
   try {
-    const qs = new URLSearchParams({ empresa: S.empresa, pagina: S.pagina, tamanho: 50, ...S.filtro });
+    const qs = new URLSearchParams({ empresa: S.empresa, pagina: S.pagina, tamanho: 100, ...S.filtro });
     const r = await api("GET", `/api/lancamentos?${qs}`);
     renderResumo(r);
     renderLista(r);
@@ -1724,7 +1733,7 @@ function renderLista(r) {
   }
   const admin = S.usuario.admin;
   lista.innerHTML = `
-    <div class="table-wrap">
+    <div class="table-wrap table-scroll">
       <table class="t">
         <thead><tr>
           <th>Data</th><th>Fornecedor / Transportador</th><th>NFS-e / RPS</th><th>Carga</th><th>Tipo</th>
@@ -1928,7 +1937,7 @@ function renderFluxo() {
   const totMes = linhas.reduce((acc, l) => somar(acc, l.v), zeros());
   const cel = (c) => (c ? `<td class="money">${fmtBRL(c)}</td>` : `<td class="money vazio">–</td>`);
   box.innerHTML = `
-    <div class="table-wrap">
+    <div class="table-wrap table-scroll">
       <table class="t">
         <thead><tr><th>Data</th><th class="r">Dinheiro</th><th class="r">Débito</th><th class="r">Crédito</th><th class="r">Boleto</th><th class="r">Total do dia</th></tr></thead>
         <tbody>
