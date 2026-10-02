@@ -1074,12 +1074,68 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
     const dados = d.dados || {};
     if (!Array.isArray(dados.lancamentos)) throw erro(400, "Arquivo de backup inválido.");
     const substituir = d.modo !== "adicionar";
+
+    // "Adicionar" não duplica: pula o que já existe com o mesmo id, ou com a mesma empresa + NFS-e/RPS
+    // (até 31 dias de diferença) E a mesma data ou o mesmo valor total — ex.: lançado no sistema e também
+    // na planilha. Exigir data ou valor iguais evita confundir notas de fornecedores diferentes com o mesmo número.
+    const chaveNF = (emp, nf) => `${emp}|${String(nf || "").toUpperCase().replace(/[^0-9A-Z]/g, "").replace(/^0+(?=.)/, "")}`;
+    const totalDe = (l) => FORMAS.reduce((a, f) => a + Math.max(0, Math.round(Number(l[f]) || 0)), 0);
+    const idsExistentes = new Set();
+    const porNF = new Map();
+    if (!substituir) {
+      const emps = [...new Set(dados.lancamentos.map((l) => Number(l.empresa)).filter((e) => EMPRESAS[e]))];
+      for (const emp of emps) {
+        for (const docId of await lerTodosMeses(emp)) {
+          for (const l of cache.get(docId).itens.values()) {
+            idsExistentes.add(l.id);
+            const k = chaveNF(emp, l.nf);
+            if (!porNF.has(k)) porNF.set(k, []);
+            porNF.get(k).push({ item: l, data: l.data, t: new Date(l.data + "T12:00:00"), total: totalDe(l) });
+          }
+        }
+      }
+    }
+    const mesmosValores = (x, l) => FORMAS.every((f) => (Number(x.item[f]) || 0) === Math.round(Number(l[f]) || 0));
+    // A planilha às vezes repete o número da NFS-e para fornecedores diferentes no mesmo dia (digitação):
+    // só é "o mesmo lançamento" se os fornecedores tiverem alguma palavra em comum.
+    const palavras = (s) => new Set(String(s || "").toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .split(/[^A-Z0-9]+/).filter((w) => w.length >= 3 && !["LTDA", "S/A", "COM", "IND", "TRANSPORTES", "TRANSPORTE", "COMERCIO", "DISTRIBUIDORA"].includes(w)));
+    const fornecedorCompativel = (a, b) => {
+      const A = palavras(a), B = palavras(b);
+      if (!A.size || !B.size || /NAO INFORMADO/.test(`${a} ${b}`.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase())) return true;
+      for (const w of A) if (B.has(w)) return true;
+      return false;
+    };
+    /** Veio de planilha, nunca foi editado no sistema, mesma data e valores/tipo diferentes -> aceita a correção da planilha. */
+    const podeCorrigir = (x, l) => x.item.origem === "planilha" && !x.item.alterado_em && (l.origem || "") === "planilha"
+      && x.data === l.data && !corrigidos.has(x.item.id)
+      && (!mesmosValores(x, l) || (TIPOS.includes(l.tipo) && x.item.tipo !== l.tipo));
+    const corrigidos = new Set();
+    /**
+     * Procura o equivalente já existente. Retorna null (é novo), { corrigir: x } (aplica a correção em x)
+     * ou { ignorar: true }. Um equivalente idêntico sempre tem prioridade, para que a mesma linha não seja
+     * "corrigida" de novo a cada restauração quando a NFS-e aparece duas vezes no mesmo dia.
+     */
+    const procurar = (id, emp, l) => {
+      if (idsExistentes.has(id)) return { ignorar: true };
+      const t = new Date(l.data + "T12:00:00");
+      const total = totalDe(l);
+      const cands = (porNF.get(chaveNF(emp, l.nf)) || []).filter((x) => Math.abs(x.t - t) <= 31 * 864e5
+        && (x.data === l.data || x.total === total) && fornecedorCompativel(x.item.fornecedor, l.fornecedor));
+      if (!cands.length) return null;
+      if (cands.some((x) => x.data === l.data && mesmosValores(x, l) && !(TIPOS.includes(l.tipo) && x.item.tipo !== l.tipo && podeCorrigir(x, l)))) return { ignorar: true };
+      const alvo = cands.find((x) => podeCorrigir(x, l));
+      return alvo ? { corrigir: alvo } : { ignorar: true };
+    };
+
     // agrupa por empresa/mês
     const grupos = new Map();
     const vistos = new Set();
     // identifica a instalação da versão arquivo único pelo "salt" do 1º usuário (estável e único por computador)
     const origemLocal = String((dados.usuarios || []).find((x) => x && x.salt)?.salt || "x").replace(/\W/g, "").slice(0, 8);
     let n = 0;
+    let ignorados = 0;
+    let atualizados = 0;
     for (const bruto of dados.lancamentos) {
       const emp = Number(bruto.empresa);
       if (!EMPRESAS[emp] || !/^\d{4}-\d{2}-\d{2}$/.test(bruto.data || "")) continue;
@@ -1087,7 +1143,16 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
       // backups da versão arquivo único numeram 1, 2, 3… em cada computador: prefixa com a "instalação"
       // de origem para dois computadores não sobrescreverem os lançamentos um do outro
       if (/^\d+$/.test(id)) id = `L${origemLocal}_${id}`;
-      if (!id || vistos.has(id)) id = novoId();
+      let correcao = false;
+      if (!substituir) {
+        const r = procurar(id, emp, bruto);
+        if (r && r.corrigir) {
+          id = r.corrigir.item.id; // regrava o mesmo lançamento com os valores corrigidos (sem criar outro)
+          corrigidos.add(id);
+          correcao = true;
+        } else if (r) { ignorados++; continue; }
+      }
+      if (!correcao && (!id || vistos.has(id))) id = novoId();
       vistos.add(id);
       const item = { origem: "backup", criado_por: "", criado_em: "", alterado_por: "", alterado_em: "", obs: "", carga: "", ...bruto };
       FORMAS.forEach((f) => (item[f] = Math.max(0, Math.round(Number(item[f]) || 0))));
@@ -1096,7 +1161,7 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
       const docId = docIdMes(emp, item.data.slice(0, 7));
       if (!grupos.has(docId)) grupos.set(docId, { empresa: emp, mes: item.data.slice(0, 7), itens: {} });
       grupos.get(docId).itens[id] = serializar(item);
-      n++;
+      if (correcao) atualizados++; else n++;
     }
     pararTudo();
     ignorarEventosAte = Date.now() + 60e3;
@@ -1110,9 +1175,14 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
       await fs.collection("meses").doc(docId).set(g, { merge: !substituir });
     }
     ignorarEventosAte = 0;
+    const fmt = (x) => x.toLocaleString("pt-BR");
     return {
-      ok: true, lancamentos: n, sair: false,
-      mensagem: `${n.toLocaleString("pt-BR")} lançamentos ${substituir ? "restaurados" : "adicionados"} em ${grupos.size} mês(es). Os usuários não são alterados pelo backup.`,
+      ok: true, lancamentos: n, ignorados, atualizados, sair: false,
+      mensagem: substituir
+        ? `${fmt(n)} lançamentos restaurados em ${grupos.size} mês(es). Os usuários não são alterados pelo backup.`
+        : `${fmt(n)} lançamentos adicionados`
+          + (atualizados ? ` · ${fmt(atualizados)} corrigidos conforme a planilha` : "")
+          + (ignorados ? ` · ${fmt(ignorados)} já existiam no sistema e foram ignorados (sem duplicar)` : "") + ".",
     };
   });
 
@@ -1289,7 +1359,7 @@ function toast(msg, tipo = "ok") {
   el.setAttribute("role", tipo === "erro" ? "alert" : "status");
   el.innerHTML = `${ic(tipo === "erro" ? "i-alert" : tipo === "info" ? "i-info" : "i-check")}<span>${esc(msg)}</span>`;
   $("#toasts").appendChild(el);
-  setTimeout(() => el.remove(), tipo === "erro" ? 6500 : 3400);
+  setTimeout(() => el.remove(), Math.max(tipo === "erro" ? 6500 : 3400, String(msg).length * 55));
 }
 
 // Camadas sobrepostas (painel lateral, modais). Esc fecha a de cima.
@@ -2451,7 +2521,7 @@ function paginaBackup() {
       modo = await modal({
         titulo: "Restaurar backup",
         corpo: `<p>O arquivo <b>${esc(file.name)}</b> tem <b>${n.toLocaleString("pt-BR")}</b> lançamentos.</p>
-          <p><b>Adicionar</b>: junta os lançamentos do arquivo aos que já existem (se o mesmo lançamento já existir, ele é atualizado).<br>
+          <p><b>Adicionar</b>: junta os lançamentos do arquivo aos que já existem, <b>sem duplicar</b> — o que já estiver no sistema (mesma NFS-e/RPS no mesmo CD, com a mesma data ou o mesmo valor) é ignorado; lançamentos vindos de planilha e nunca editados recebem as correções de valor da planilha nova.<br>
           <b>Substituir tudo</b>: apaga <u>todos</u> os lançamentos atuais dos dois CDs e deixa apenas os do arquivo.</p>`,
         botoes: [{ txt: "Cancelar", valor: null }, { txt: "Adicionar", cls: "btn-primary", valor: "adicionar" }, { txt: "Substituir tudo", cls: "btn-red", valor: "substituir" }],
       });

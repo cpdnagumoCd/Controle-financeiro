@@ -44,8 +44,11 @@ Os dados ficam no **Firebase** (Authentication + Cloud Firestore) e a página é
 ## 3. Primeiro acesso
 
 1. Abra o link. Aparece **Configuração inicial**: crie o usuário **administrador** (nome, login e senha).
-2. **Trazer o histórico da planilha** (opcional, uma vez): aba **Usuários** > **Restaurar backup** > escolha o arquivo
-   `historico_cd2_para_importar.json` (fica na pasta *Projeto financeiro* do computador — **não** suba esse arquivo no GitHub) > **Adicionar**.
+2. **Trazer o histórico das planilhas**: menu **Backup** > **Restaurar backup** > escolha os arquivos
+   `backup_cd2_planilha_out2026.json` e `backup_cd1_planilha_out2026.json` (ficam na pasta *Projeto financeiro* do computador —
+   **não** suba esses arquivos no GitHub) > **Adicionar**. O sistema ignora o que já existe (sem duplicar) e aplica correções
+   de valor feitas na planilha em lançamentos importados que nunca foram editados no sistema.
+   Para gerar de novo a partir de uma planilha atualizada: `python importar_planilha.py "planilha.xlsb" --empresa 501 --json saida.json`.
 3. Se você já usou a versão *arquivo único* (`Controle Financeiro.html`), baixe o backup nela e restaure aqui com **Adicionar**.
 4. Crie os operadores na aba **Usuários**:
    - **Administrador** — acesso total aos dois CDs, cria/exclui usuários e exclui lançamentos.
