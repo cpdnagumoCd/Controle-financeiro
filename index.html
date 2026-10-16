@@ -664,6 +664,14 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
     return itens;
   }
 
+  // Tempo que um mês já lido pode ser reaproveitado da memória, sem nova leitura no Firebase
+  // (economiza tráfego: cada mês tem ~250 KB). Meses passados quase nunca mudam; o mês atual muda o tempo
+  // todo. Alterações feitas neste computador atualizam a memória na hora; o mês na tela é atualizado em tempo real.
+  const MIN = 60e3;
+  const ehPassado = (mes) => mes < agora().slice(0, 7);
+  const validade = { duplicidade: (m) => (ehPassado(m) ? 60 * MIN : 5 * MIN), consulta: (m) => (ehPassado(m) ? 10 * MIN : 30e3),
+    fornecedores: (m) => (ehPassado(m) ? 60 * MIN : 10 * MIN), fluxo: (m) => (ehPassado(m) ? 10 * MIN : 0) };
+
   async function lerMes(emp, mes, maxIdadeMs = 0) {
     const id = docIdMes(emp, mes);
     const c = cache.get(id);
@@ -754,7 +762,7 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
     if (forcar) return;
     const alvo = reg.data.slice(0, 7);
     const meses = mesesEntre(somarMeses(alvo, -6) + "-01", somarMeses(alvo, 6) + "-01");
-    const listas = await Promise.all(meses.map((m) => lerMes(reg.empresa, m, m === alvo ? 0 : 5 * 60e3)));
+    const listas = await Promise.all(meses.map((m) => lerMes(reg.empresa, m, m === alvo ? 0 : validade.duplicidade(m))));
     const lim = 180 * 864e5;
     const t = new Date(reg.data + "T12:00:00");
     for (const itens of listas) {
@@ -772,7 +780,7 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
     if (de && ate) {
       const meses = mesesEntre(de, ate);
       if (meses.length <= 24) {
-        await Promise.all(meses.map((m) => lerMes(emp, m, 30e3)));
+        await Promise.all(meses.map((m) => lerMes(emp, m, validade.consulta(m))));
         ids = meses.map((m) => docIdMes(emp, m));
       }
     }
@@ -899,7 +907,7 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
     const emp = exigirEmpresa(u, q.empresa);
     const hoje = agora().slice(0, 10);
     const meses = mesesEntre(somarMeses(hoje, -3) + "-01", hoje);
-    const listas = await Promise.all(meses.map((m) => lerMes(emp, m, 10 * 60e3)));
+    const listas = await Promise.all(meses.map((m) => lerMes(emp, m, validade.fornecedores(m))));
     const cont = {};
     listas.forEach((itens) => itens.forEach((l) => (cont[l.fornecedor] = (cont[l.fornecedor] || 0) + 1)));
     return Object.entries(cont).sort((a, b) => b[1] - a[1]).slice(0, 800).map(([n]) => n).sort();
@@ -968,7 +976,7 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
     const emp = exigirEmpresa(u, q.empresa);
     const mes = q.mes || agora().slice(0, 7);
     if (!/^\d{4}-\d{2}$/.test(mes)) throw erro(400, "Mês inválido.");
-    const itens = await lerMes(emp, mes, 0);
+    const itens = await lerMes(emp, mes, validade.fluxo(mes));
     observar([docIdMes(emp, mes)]);
     const porDia = {};
     for (const l of itens.values()) {
