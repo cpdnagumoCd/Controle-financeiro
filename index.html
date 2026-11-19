@@ -99,7 +99,8 @@ kbd { font: 600 11px var(--font); background: rgba(255, 255, 255, .18); border-r
 .dica-inline { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--muted); }
 
 .seg { display: inline-flex; background: var(--navy-50); border: 1.5px solid var(--line); border-radius: 10px; padding: 3px; gap: 3px; align-self: flex-start; }
-.seg button { border: 0; background: transparent; color: var(--ink-2); height: 34px; padding: 0 14px; border-radius: 7px; font-weight: 650; display: inline-flex; align-items: center; gap: 7px; }
+.seg button { border: 0; background: transparent; color: var(--ink-2); height: 34px; padding: 0 14px; border-radius: 7px; font-weight: 650; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.flanc .seg button { padding: 0 12px; }
 .seg button:hover { color: var(--navy); background: #fff; }
 .seg button.on { background: var(--navy); color: #fff; box-shadow: 0 1px 3px rgba(0, 32, 63, .25); }
 .seg button.on.red { background: var(--red-700); }
@@ -494,6 +495,69 @@ table.t { width: 100%; border-collapse: separate; border-spacing: 0; }
 }
 .t th.quebra { white-space: normal; min-width: 150px; }
 
+/* ---------------------------------------------------------------- cargas sem cobrança */
+.flanc .c4 { grid-column: span 4; }
+.seg button.on.gray { background: var(--ink-2); }
+.aviso-sc { display: none; background: var(--navy-50); color: var(--ink-2); border: 1px dashed var(--navy-200); border-radius: 9px; padding: 9px 12px; gap: 8px; align-items: flex-start; font-size: 13px; }
+.aviso-sc svg { color: var(--navy); margin-top: 1px; }
+.flanc.sc .aviso-sc { display: flex; }
+.flanc.sc .req-cob { display: none; }
+.flanc.sc .total-form b { color: var(--muted); }
+.nota-sc { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--navy-50); color: var(--ink-2); font-size: 12.5px; font-weight: 600; border-bottom: 1px solid var(--line-2); }
+.nota-sc svg { width: 16px; height: 16px; color: var(--muted); }
+.dia-lista li.sc .val { color: var(--muted); font-weight: 600; }
+.t tr.linha-sc td.din { color: var(--muted); }
+.t tr.linha-sc td.din.total { text-decoration: line-through; text-decoration-color: rgba(86, 100, 122, .6); }
+.hero-sc { display: inline-flex; align-items: center; gap: 7px; align-self: flex-start; margin: -6px 0 14px; padding: 5px 8px 5px 10px; border-radius: 999px; background: rgba(255, 255, 255, .12); color: #fff; font-size: 12.5px; font-weight: 650; text-decoration: none; }
+.hero-sc:hover { background: rgba(255, 255, 255, .2); }
+.hero-sc svg { width: 15px; height: 15px; }
+
+.sc-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.sc-kpi { padding: 16px 20px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sc-kpi small { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.sc-kpi b { font-size: 28px; font-weight: 800; color: var(--navy); font-variant-numeric: tabular-nums; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-kpi span { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.sc-kpi.destaque { background: linear-gradient(160deg, var(--navy) 0%, var(--navy-900) 100%); border: 0; color: #fff; }
+.sc-kpi.destaque small, .sc-kpi.destaque span { color: rgba(255, 255, 255, .78); }
+.sc-kpi.destaque b { color: #fff; font-size: 34px; }
+.sc-medidor { height: 6px; border-radius: 999px; background: var(--navy-100); margin-top: 8px; overflow: hidden; }
+.sc-medidor i { display: block; height: 100%; background: var(--navy); border-radius: 999px; }
+.sc-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 20px; }
+.sc-chart { position: relative; display: flex; align-items: stretch; gap: 2px; height: 210px; padding-top: 18px; border-bottom: 1px solid var(--line); }
+.sc-col { flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; cursor: pointer; position: relative; border-radius: 4px 4px 0 0; }
+.sc-col:hover:not(:disabled), .sc-col:focus-visible { background: var(--navy-50); outline: none; }
+.sc-col:disabled { cursor: default; }
+.sc-bar { display: block; background: var(--navy-600); border-radius: 4px 4px 0 0; position: relative; margin: 0 1px; }
+.sc-col:hover .sc-bar, .sc-col.sel .sc-bar { background: var(--navy); }
+.sc-col.sel .sc-bar { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--red); }
+.sc-bar em { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); font-style: normal; font-size: 11px; font-weight: 700; color: var(--ink-2); padding-bottom: 2px; }
+.sc-d { position: absolute; top: 100%; left: 0; right: 0; text-align: center; font-size: 10.5px; color: var(--muted); padding-top: 4px; font-variant-numeric: tabular-nums; }
+.sc-d.fds { color: #8b97a8; }
+.sc-col.zero .sc-d { color: #a9b3c1; }
+.sc-col.sel .sc-d { color: var(--red-700); font-weight: 800; }
+.sc-dica { position: absolute; top: -8px; transform: translate(-50%, -100%); background: var(--navy-950); color: #fff; font-size: 12px; font-weight: 600; padding: 5px 9px; border-radius: 7px; white-space: nowrap; pointer-events: none; z-index: 3; }
+.sc-rodape { margin-top: 26px; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.sc-rank { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.sc-rank li { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(60px, 1fr) 34px; gap: 10px; align-items: center; font-size: 13px; }
+.sc-rank .nm { font-weight: 650; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-rank .trilho { height: 10px; border-radius: 0 4px 4px 0; background: transparent; }
+.sc-rank .trilho i { display: block; height: 100%; min-width: 4px; background: var(--navy-600); border-radius: 0 4px 4px 0; }
+.sc-rank b { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+.sc-rank li.outros .nm { color: var(--muted); font-style: italic; }
+.sc-busca { width: min(300px, 100%); }
+.sc-busca .input { height: 36px; }
+.filtro-dia-x { border: 0; background: var(--red-50); color: var(--red-800); width: 24px; height: 24px; border-radius: 50%; display: inline-grid; place-items: center; vertical-align: middle; margin-left: 4px; cursor: pointer; }
+.filtro-dia-x svg { width: 14px; height: 14px; }
+@media (max-width: 1280px) { .sc-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sc-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) {
+  .flanc .c4 { grid-column: 1 / -1; }
+  .seg { flex-wrap: wrap; }
+  .sc-kpis { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .sc-kpi b { font-size: 22px; } .sc-kpi.destaque b { font-size: 26px; }
+  .sc-d { font-size: 9px; }
+  .sc-col:nth-child(even) .sc-d { visibility: hidden; }
+}
+
 </style>
 </head>
 <body>
@@ -527,6 +591,7 @@ table.t { width: 100%; border-collapse: separate; border-spacing: 0; }
     <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="1.5"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
     <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3L12 4z"/><path d="M12 10v4M12 17v.01"/></symbol>
     <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></symbol>
+    <symbol id="i-nocharge" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M14.6 9.2c-.5-.9-1.5-1.4-2.6-1.4-1.5 0-2.6.8-2.6 2s1.1 1.7 2.6 2 2.6.8 2.6 2-1.1 2-2.6 2c-1.2 0-2.2-.6-2.7-1.5M12 6.3v1.5M12 16.2v1.5M5.5 5.5l13 13"/></symbol>
     <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></symbol>
   </svg>
 
@@ -566,7 +631,10 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
   const DOMINIO = "@financeiro.nagumo.app"; // login "joao.silva" vira o e-mail técnico joao.silva@financeiro.nagumo.app
   const EMPRESAS = { 501: "CD 1", 507: "CD 2" };
   const FORMAS = ["dinheiro", "debito", "credito", "boleto"];
-  const TIPOS = ["agendada", "sem_agenda"];
+  const TIPOS = ["agendada", "sem_agenda", "sem_cobranca"];
+  /** Cargas sem cobrança ficam fora de todos os totais (fluxo de caixa e consulta); têm painel próprio. */
+  const cobrada = (l) => l.tipo !== "sem_cobranca";
+  const ROTULO_TIPO = { agendada: "AGENDADA", sem_agenda: "SEM AGENDA", sem_cobranca: "SEM COBRANÇA" };
   const CAMPOS_ITEM = ["data", "fornecedor", "nf", "carga", ...FORMAS, "tipo", "quitado", "obs", "origem", "criado_por", "criado_em", "alterado_por", "alterado_em"];
 
   window.API_INFO = { modo: "firebase", loginFixo: true, senhaSoPropria: true, backupMescla: true };
@@ -779,15 +847,16 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
     };
     for (const f of FORMAS) reg[f] = centavos(d[f], f);
     if (!reg.fornecedor) throw erro(400, "Informe o fornecedor / transportador.");
-    if (!reg.nf) throw erro(400, "Informe o número da NFS-e / RPS.");
-    if (!TIPOS.includes(reg.tipo)) throw erro(400, "Informe o tipo da carga (agendada ou sem agenda).");
-    if (somaL(reg) <= 0) throw erro(400, "Informe o valor em pelo menos uma forma de pagamento.");
+    if (!TIPOS.includes(reg.tipo)) throw erro(400, "Informe o tipo da carga (agendada, sem agenda ou sem cobrança).");
+    // carga sem cobrança: NFS-e e valor são opcionais (não há pagamento)
+    if (!reg.nf && cobrada(reg)) throw erro(400, "Informe o número da NFS-e / RPS.");
+    if (somaL(reg) <= 0 && cobrada(reg)) throw erro(400, "Informe o valor em pelo menos uma forma de pagamento.");
     return reg;
   }
 
   /** Mesma NFS-e na mesma empresa em até ~180 dias (a numeração reinicia com o tempo). */
   async function checarDuplicado(reg, ignorarId, forcar) {
-    if (forcar) return;
+    if (forcar || !reg.nf) return; // sem NFS-e (carga sem cobrança): nada a comparar
     const alvo = reg.data.slice(0, 7);
     const meses = mesesEntre(somarMeses(alvo, -6) + "-01", somarMeses(alvo, 6) + "-01");
     const listas = await Promise.all(meses.map((m) => lerMes(reg.empresa, m, m === alvo ? 0 : validade.duplicidade(m))));
@@ -925,7 +994,14 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
     const tam = Math.min(Math.max(Number(q.tamanho) || 50, 1), 500);
     const pag = Math.max(Number(q.pagina) || 1, 1);
     const soma = { dinheiro: 0, debito: 0, credito: 0, boleto: 0 };
-    lista.forEach((l) => FORMAS.forEach((f) => (soma[f] += l[f] || 0)));
+    // cargas sem cobrança aparecem na lista, mas só somam quando o filtro pede exatamente elas
+    const soSemCobranca = q.tipo === "sem_cobranca";
+    let foraDaSoma = 0;
+    lista.forEach((l) => {
+      if (!soSemCobranca && !cobrada(l)) { foraDaSoma++; return; }
+      FORMAS.forEach((f) => (soma[f] += l[f] || 0));
+    });
+    soma.sem_cobranca = foraDaSoma;
     const sel = formasDoFiltro(q);
     // com formas marcadas no filtro, o total é só a soma delas (ex.: só a parte em débito de um pagamento dividido)
     soma.total = sel.length ? sel.reduce((a, f) => a + soma[f], 0) : somaL(soma);
@@ -941,7 +1017,7 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
     const cel = (s) => (/[;"\r\n]/.test(String(s)) ? `"${String(s).replace(/"/g, '""')}"` : s);
     let csv = "DATA;FORNECEDOR / TRANSPORTADOR;NFS-e / RPS;CARGA;EMP.;TIPO DA CARGA;DINHEIRO;DEBITO;CREDITO;BOLETO;TOTAL;QUITADO;OBSERVACAO;LANCADO POR\r\n";
     for (const l of lista) {
-      csv += [fmtBR(l.data), l.fornecedor, l.nf, l.carga, emp, l.tipo === "agendada" ? "AGENDADA" : "SEM AGENDA",
+      csv += [fmtBR(l.data), l.fornecedor, l.nf, l.carga, emp, ROTULO_TIPO[l.tipo] || "AGENDADA",
         br(l.dinheiro), br(l.debito), br(l.credito), br(l.boleto), br(somaL(l)), Number(l.quitado) ? "SIM" : "NÃO", l.obs, l.criado_por].map(cel).join(";") + "\r\n";
     }
     return { arquivo: `lancamentos_${emp}_${agora().slice(0, 10).replace(/-/g, "")}.csv`, conteudo: csv, tipo: "text/csv;charset=utf-8" };
@@ -1025,7 +1101,8 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
     observar([docIdMes(emp, mes)]);
     const porDia = {};
     for (const l of itens.values()) {
-      const d = (porDia[l.data] ||= { data: l.data, agendada: { dinheiro: 0, debito: 0, credito: 0, boleto: 0 }, sem_agenda: { dinheiro: 0, debito: 0, credito: 0, boleto: 0 }, quantidade: 0 });
+      const d = (porDia[l.data] ||= { data: l.data, agendada: { dinheiro: 0, debito: 0, credito: 0, boleto: 0 }, sem_agenda: { dinheiro: 0, debito: 0, credito: 0, boleto: 0 }, quantidade: 0, sem_cobranca: 0 });
+      if (!cobrada(l)) { d.sem_cobranca++; continue; } // fora do fluxo de caixa
       FORMAS.forEach((f) => (d[l.tipo][f] += l[f] || 0));
       d.quantidade++;
     }
@@ -1171,6 +1248,7 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
      */
     const procurar = (id, emp, l) => {
       if (idsExistentes.has(id)) return { ignorar: true };
+      if (!String(l.nf || "").trim()) return null; // sem NFS-e (carga sem cobrança): só o id identifica
       const t = new Date(l.data + "T12:00:00");
       const total = totalDe(l);
       const cands = (porNF.get(chaveNF(emp, l.nf)) || []).filter((x) => Math.abs(x.t - t) <= 31 * 864e5
@@ -1269,7 +1347,8 @@ window.IMAGENS = {"logo-azul.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
 
 /* =====================================================================
    Controle Financeiro · CD 1 (501) / CD 2 (507)
-   Interface: menu lateral + páginas (#/novo, #/consulta, #/fluxo, #/usuarios, #/backup).
+   Interface: menu lateral + páginas (#/novo, #/consulta, #/fluxo, #/semcobranca, #/usuarios, #/backup).
+   Tipos de carga: agendada, sem_agenda e sem_cobranca (esta fica fora de todos os totais).
    Os dados vêm de api(): servidor (server.py), navegador (local-api.js) ou Firebase (firebase-api.js).
    ===================================================================== */
 
@@ -1285,6 +1364,7 @@ const PAGINAS = {
   novo: { titulo: "Novo lançamento", ic: "i-plus", menu: "Novo lançamento" },
   consulta: { titulo: "Consultar lançamentos", ic: "i-list", menu: "Consultar" },
   fluxo: { titulo: "Fluxo de caixa", ic: "i-chart", menu: "Fluxo de caixa" },
+  semcobranca: { titulo: "Cargas sem cobrança", ic: "i-nocharge", menu: "Sem cobrança" },
   usuarios: { titulo: "Usuários", ic: "i-users", menu: "Usuários", admin: true },
   backup: { titulo: "Backup dos dados", ic: "i-database", menu: "Backup", admin: true },
 };
@@ -1313,6 +1393,9 @@ const S = {
   dia: "",
   tipoTabela: "todas",
   fluxo: null,
+  // cargas sem cobrança (painel à parte; usa o mesmo mês do fluxo)
+  sc: null,
+  diaSC: "",
 };
 
 /* ---------------------------------------------------------------- utilitários */
@@ -1643,7 +1726,9 @@ function definirEmpresa(cod) {
   S.empresa = cod;
   S.pag = 1;
   S.fluxo = null;
+  S.sc = null;
   S.dia = "";
+  S.diaSC = "";
   S.fornecedores = [];
   guardar("empresa", cod);
 }
@@ -1652,7 +1737,7 @@ async function sair() {
   await api("POST", "/api/logout").catch(() => {});
   guardar("empresa", null);
   fecharCamadas();
-  Object.assign(S, { usuario: null, empresa: null, filtro: null, pag: 1, fluxo: null, dia: "", fornecedores: [] });
+  Object.assign(S, { usuario: null, empresa: null, filtro: null, pag: 1, fluxo: null, sc: null, dia: "", diaSC: "", fornecedores: [] });
   history.replaceState(null, "", location.pathname + location.search);
   renderLogin();
 }
@@ -1742,7 +1827,7 @@ function renderSidebar() {
       </div>
     </div>
     <nav class="sb-nav">
-      ${link("novo")}${link("consulta")}${link("fluxo")}
+      ${link("novo")}${link("consulta")}${link("fluxo")}${link("semcobranca")}
       ${u.admin ? `<div class="titulo">Administração</div>${link("usuarios")}${link("backup")}` : ""}
     </nav>
     <div class="sb-espaco"></div>
@@ -1785,7 +1870,7 @@ function cabecalho(titulo, descricao, acoes = "") {
 
 function mostrarPagina() {
   window.scrollTo(0, 0);
-  ({ novo: paginaNovo, consulta: paginaConsulta, fluxo: paginaFluxo, usuarios: paginaUsuarios, backup: paginaBackup })[S.pagina]();
+  ({ novo: paginaNovo, consulta: paginaConsulta, fluxo: paginaFluxo, semcobranca: paginaSemCobranca, usuarios: paginaUsuarios, backup: paginaBackup })[S.pagina]();
 }
 
 // Firebase: alguém salvou algo no mês que está na tela -> atualiza os dados da página aberta
@@ -1794,6 +1879,7 @@ window.addEventListener("dados-alterados", debounce(() => {
   if (S.pagina === "novo") carregarDia();
   else if (S.pagina === "consulta") carregarLista();
   else if (S.pagina === "fluxo") carregarFluxo();
+  else if (S.pagina === "semcobranca") carregarSemCobranca();
 }, 400));
 
 async function carregarFornecedores() {
@@ -1825,20 +1911,22 @@ function criarFormLancamento(host, opts = {}) {
       ${item ? `<div class="aviso-edicao">${ic("i-edit")}<span>Lançado por <b>${esc(item.criado_por || "—")}</b>${item.criado_em ? ` em ${esc(fmtDataHora(item.criado_em))}` : ""}${item.alterado_por ? ` · alterado por <b>${esc(item.alterado_por)}</b> em ${esc(fmtDataHora(item.alterado_em))}` : ""}</span></div>` : ""}
       <div class="grade">
         <div class="field c2"><label>Data do pagamento <span class="req">*</span></label><input class="input" type="date" name="data" required></div>
-        <div class="field c2"><label>NFS-e / RPS <span class="req">*</span></label><input class="input" name="nf" placeholder="Nº do título" required></div>
+        <div class="field c2"><label>NFS-e / RPS <span class="req req-cob">*</span></label><input class="input" name="nf" placeholder="Nº do título" required></div>
         <div class="field c2"><label>Carga</label><input class="input" name="carga" placeholder="Nº da carga"></div>
         <div class="field c6"><label>Fornecedor / Transportador <span class="req">*</span></label>
           <input class="input" name="fornecedor" list="${dl}" placeholder="Razão social em que a nota foi emitida" required></div>
-        <div class="field c3"><span class="rotulo">Tipo da carga <span class="req">*</span></span>
+        <div class="field c4"><span class="rotulo">Tipo da carga <span class="req">*</span></span>
           <div class="seg" data-tipo role="group" aria-label="Tipo da carga">
             <button type="button" data-t="agendada">${ic("i-calendar")}Agendada</button>
             <button type="button" data-t="sem_agenda" class="red">${ic("i-truck")}Sem agenda</button>
+            <button type="button" data-t="sem_cobranca" class="gray">${ic("i-nocharge")}Sem cobrança</button>
           </div>
         </div>
-        <div class="field c3"><span class="rotulo">Quitado</span>
+        <div class="field c2"><span class="rotulo">Quitado</span>
           <label class="switch"><input type="checkbox" name="quitado"><span class="trilho"></span><span data-quit-txt>Não</span></label>
         </div>
-        <div class="field c6"><span class="rotulo">Forma de pagamento <span class="req">*</span> <span class="dica-inline">· marque mais de uma se o pagamento foi dividido</span></span>
+        <div class="c6 aviso-sc" role="note">${ic("i-info")}<span><b>Carga sem cobrança:</b> não entra no total das cargas agendadas e sem agenda nem no fluxo de caixa. NFS-e e valor são opcionais. Acompanhe em <b>Sem cobrança</b>, no menu.</span></div>
+        <div class="field c6"><span class="rotulo">Forma de pagamento <span class="req req-cob">*</span> <span class="dica-inline">· marque mais de uma se o pagamento foi dividido</span></span>
           <div class="chips" role="group" aria-label="Formas de pagamento">
             ${FORMAS.map((f) => `<button type="button" class="chip" data-forma="${f.k}" aria-pressed="false">${ic(f.ic)}${f.nome}</button>`).join("")}
           </div>
@@ -1847,7 +1935,7 @@ function criarFormLancamento(host, opts = {}) {
         <div class="field c6"><label>Observação</label><input class="input" name="obs" placeholder="Opcional"></div>
       </div>
       <div class="flanc-rodape">
-        <div class="total-form"><small>Total do lançamento</small><b data-total>R$ 0,00</b></div>
+        <div class="total-form"><small data-total-rot>Total do lançamento</small><b data-total>R$ 0,00</b></div>
         <span class="esp"></span>
         <button type="button" class="btn btn-ghost" data-cancelar>${item ? "Cancelar" : "Limpar"}</button>
         <button type="submit" class="btn btn-red btn-lg">${ic("i-check")}${item ? "Salvar alterações" : "Salvar lançamento"}</button>
@@ -1858,7 +1946,12 @@ function criarFormLancamento(host, opts = {}) {
   const f = $("form", host);
   const valores = $(".valores", f);
 
-  const pintarTipo = () => $$("[data-t]", f).forEach((b) => { b.classList.toggle("on", b.dataset.t === st.tipo); b.setAttribute("aria-pressed", b.dataset.t === st.tipo); });
+  const pintarTipo = () => {
+    $$("[data-t]", f).forEach((b) => { b.classList.toggle("on", b.dataset.t === st.tipo); b.setAttribute("aria-pressed", b.dataset.t === st.tipo); });
+    const sc = st.tipo === "sem_cobranca";
+    f.classList.toggle("sc", sc); // CSS: esconde os "*" da NFS-e e do valor e mostra o aviso
+    $("[data-total-rot]", f).textContent = sc ? "Valor informado · não soma no fluxo" : "Total do lançamento";
+  };
   const lerValores = () => {
     const v = zeros();
     let ok = true;
@@ -1876,7 +1969,7 @@ function criarFormLancamento(host, opts = {}) {
     $$("input", valores).forEach((i) => (antes[i.name] = i.value));
     $$("[data-forma]", f).forEach((c) => { const on = st.formas.has(c.dataset.forma); c.classList.toggle("on", on); c.setAttribute("aria-pressed", on); });
     valores.innerHTML = FORMAS.filter((fm) => st.formas.has(fm.k)).map((fm) => `
-      <div class="field"><label>${ic(fm.ic)}Valor · ${fm.nome} <span class="req">*</span></label>
+      <div class="field"><label>${ic(fm.ic)}Valor · ${fm.nome} <span class="req req-cob">*</span></label>
         <div class="dinheiro"><span>R$</span><input class="input" name="v_${fm.k}" inputmode="decimal" placeholder="0,00" value="${esc(antes["v_" + fm.k] || "")}"></div>
       </div>`).join("");
     $$("input", valores).forEach((i) => {
@@ -1924,13 +2017,14 @@ function criarFormLancamento(host, opts = {}) {
 
   async function salvar(forcar = false) {
     $$(".invalido", f).forEach((i) => i.classList.remove("invalido"));
-    const faltando = ["data", "nf", "fornecedor"].filter((n) => !f[n].value.trim());
+    const sc = st.tipo === "sem_cobranca"; // sem cobrança: NFS-e e valor opcionais
+    const faltando = ["data", "nf", "fornecedor"].filter((n) => !f[n].value.trim() && !(sc && n === "nf"));
     faltando.forEach((n) => f[n].classList.add("invalido"));
     if (faltando.length) { f[faltando[0]].focus(); return toast("Preencha os campos obrigatórios destacados.", "erro"); }
     const { v, ok } = lerValores();
     if (!ok) return toast("Há um valor inválido. Use o formato 1.234,56.", "erro");
     const total = somaObj(v);
-    if (total <= 0) {
+    if (total <= 0 && !sc) {
       $$("input", valores).forEach((i) => i.classList.add("invalido"));
       $("input", valores)?.focus();
       return toast("Informe o valor pago.", "erro");
@@ -1947,11 +2041,12 @@ function criarFormLancamento(host, opts = {}) {
     btn.disabled = true;
     try {
       const l = item ? await api("PUT", `/api/lancamentos/${item.id}`, corpo) : await api("POST", "/api/lancamentos", corpo);
-      S.ultimoTipo = st.tipo;
+      // "sem cobrança" não fica memorizado: o próximo lançamento volta ao tipo anterior (evita lançar cargas cobradas fora do fluxo por engano)
+      if (!sc) S.ultimoTipo = st.tipo;
       S.ultimasFormas = [...st.formas];
       if (item) toast("Lançamento atualizado.");
       else {
-        toast(`NFS-e/RPS ${l.nf} lançada · ${fmtBRL(total)}`);
+        toast(sc ? `Carga sem cobrança registrada${l.nf ? ` · NFS-e/RPS ${l.nf}` : ""} (fora do fluxo de caixa)` : `NFS-e/RPS ${l.nf} lançada · ${fmtBRL(total)}`);
         limpar(true);
         f.nf.focus();
       }
@@ -1974,7 +2069,7 @@ function criarFormLancamento(host, opts = {}) {
 }
 
 function abrirEdicao(l, aoSalvar) {
-  painelLateral(`Editar lançamento · NFS-e ${l.nf}`, (host, fechar) => {
+  painelLateral(`Editar lançamento · ${l.nf ? `NFS-e ${l.nf}` : l.fornecedor}`, (host, fechar) => {
     host.innerHTML = `<section class="card"><div class="card-b"></div></section>`;
     criarFormLancamento($(".card-b", host), {
       item: l,
@@ -1986,7 +2081,7 @@ function abrirEdicao(l, aoSalvar) {
 
 async function excluirLancamento(l, depois) {
   const ok = await confirmar("Excluir lançamento",
-    `Excluir a NFS-e/RPS <b>${esc(l.nf)}</b> de <b>${esc(l.fornecedor)}</b> (${fmtData(l.data)} · ${fmtBRL(l.total)})?<br>Esta ação não pode ser desfeita.`,
+    `Excluir ${l.nf ? `a NFS-e/RPS <b>${esc(l.nf)}</b>` : "o lançamento"} de <b>${esc(l.fornecedor)}</b> (${fmtData(l.data)} · ${semCobranca(l) ? "sem cobrança" : fmtBRL(l.total)})?<br>Esta ação não pode ser desfeita.`,
     "Excluir", true);
   if (!ok) return;
   try { await api("DELETE", `/api/lancamentos/${l.id}`); toast("Lançamento excluído."); depois?.(); }
@@ -1998,7 +2093,12 @@ async function alternarQuitado(l, depois) {
   catch (x) { toast(x.message, "erro"); }
 }
 
-const seloTipo = (t) => (t === "agendada" ? `<span class="selo s-navy">Agendada</span>` : `<span class="selo s-red">Sem agenda</span>`);
+const seloTipo = (t) => (t === "agendada" ? `<span class="selo s-navy">Agendada</span>`
+  : t === "sem_cobranca" ? `<span class="selo s-gray" title="Não entra nos totais nem no fluxo de caixa">Sem cobrança</span>`
+  : `<span class="selo s-red">Sem agenda</span>`);
+const semCobranca = (l) => l.tipo === "sem_cobranca";
+/** NFS-e na tela: carga sem cobrança pode não ter. */
+const nfTxt = (l) => (l.nf ? esc(l.nf) : `<span class="vazio">sem NFS-e</span>`);
 const formasDe = (l) => FORMAS.filter((f) => l[f.k] > 0).map((f) => f.nome).join(" + ");
 
 /* ---------------------------------------------------------------- página: novo lançamento */
@@ -2045,12 +2145,13 @@ async function carregarDia() {
         ${FORMAS.map((f) => `<div><small>${f.nome}</small><b class="${r.soma[f.k] ? "" : "vazio"}">${fmtBRL(r.soma[f.k])}</b></div>`).join("")}
         <div class="tot"><small>Total do dia · ${diaSemana(dia)}</small><b>${fmtBRL(r.soma.total)}</b></div>
       </div>
+      ${r.soma.sem_cobranca ? `<div class="nota-sc">${ic("i-nocharge")}<span>${r.soma.sem_cobranca} ${r.soma.sem_cobranca === 1 ? "carga sem cobrança" : "cargas sem cobrança"} no dia, fora do total</span></div>` : ""}
       ${r.itens.length ? `<ul class="dia-lista">
         ${r.itens.map((l) => `
-          <li data-id="${esc(l.id)}" title="Clique para editar">
+          <li data-id="${esc(l.id)}" title="Clique para editar" class="${semCobranca(l) ? "sc" : ""}">
             <div class="info"><b>${esc(l.fornecedor)}</b>
-              <small>NFS-e ${esc(l.nf)}${l.carga ? ` · carga ${esc(l.carga)}` : ""} · ${seloTipo(l.tipo)} · ${esc(formasDe(l))}</small></div>
-            <span class="val">${fmtBRL(l.total)}</span>
+              <small>${l.nf ? `NFS-e ${esc(l.nf)}` : "Sem NFS-e"}${l.carga ? ` · carga ${esc(l.carga)}` : ""} · ${seloTipo(l.tipo)}${l.total ? ` · ${esc(formasDe(l))}` : ""}</small></div>
+            <span class="val">${semCobranca(l) ? (l.total ? `<s title="Não soma no total">${fmtBRL(l.total)}</s>` : "—") : fmtBRL(l.total)}</span>
           </li>`).join("")}
       </ul>` : `<div class="dia-vazio">${ic("i-receipt")}<br>Nenhum pagamento lançado neste dia.</div>`}`;
     const porId = Object.fromEntries(r.itens.map((l) => [String(l.id), l]));
@@ -2104,7 +2205,7 @@ function paginaConsulta() {
             </div>
           </div>
           <div class="field"><label>Tipo da carga</label>
-            <select class="input" name="tipo"><option value="">Todos</option><option value="agendada">Agendada</option><option value="sem_agenda">Sem agenda</option></select></div>
+            <select class="input" name="tipo"><option value="">Todos</option><option value="agendada">Agendada</option><option value="sem_agenda">Sem agenda</option><option value="sem_cobranca">Sem cobrança</option></select></div>
           <div class="field"><label>Quitado</label>
             <select class="input" name="quitado"><option value="">Todos</option><option value="1">Sim</option><option value="0">Não</option></select></div>
           <div class="botoes"><button type="button" class="btn btn-ghost" data-limpar>${ic("i-x")}Limpar filtros</button></div>
@@ -2167,7 +2268,7 @@ function paginaConsulta() {
   multi.addEventListener("keydown", (e) => { if (e.key === "Escape" && !painel.classList.contains("hidden")) { e.stopPropagation(); abrirMulti(false); $("[data-multi]", multi).focus(); } });
 
   $("[data-limpar]", f).onclick = () => { f.reset(); caixas.forEach((c) => (c.checked = false)); pintarMulti(); aplicar(); };
-  $("[data-exportar]").onclick = exportarLancamentos;
+  $("[data-exportar]").onclick = () => exportarLancamentos();
   marcarRapidos();
   carregarLista();
 }
@@ -2179,8 +2280,8 @@ function marcarRapidos() {
   });
 }
 
-async function exportarLancamentos() {
-  const qs = new URLSearchParams({ empresa: S.empresa, ...S.filtro, ordem: S.ordem });
+async function exportarLancamentos(filtro = S.filtro, ordem = S.ordem) {
+  const qs = new URLSearchParams({ empresa: S.empresa, ...filtro, ordem });
   if (!MODO_LOCAL) return (window.location.href = `/api/lancamentos/exportar?${qs}`);
   try {
     const r = await api("GET", `/api/lancamentos/exportar?${qs}`);
@@ -2221,7 +2322,7 @@ function renderKpis(r) {
   kpis.innerHTML = `
     <div><small>Lançamentos</small><b>${r.quantidade.toLocaleString("pt-BR")}</b></div>
     ${visiveis.map((f) => `<div><small>${f.nome}</small><b class="${r.soma[f.k] ? "" : "vazio"}">${fmtBRL(r.soma[f.k])}</b></div>`).join("")}
-    <div><small>Total filtrado${sel.length && sel.length < FORMAS.length ? ` · ${visiveis.map((f) => f.nome).join(" + ")}` : ""}</small><b>${fmtBRL(r.soma.total)}</b></div>`;
+    <div${r.soma.sem_cobranca ? ` title="${r.soma.sem_cobranca} ${r.soma.sem_cobranca === 1 ? "carga sem cobrança está" : "cargas sem cobrança estão"} na lista, mas não somam"` : ""}><small>${S.filtro?.tipo === "sem_cobranca" ? "Valor informado · sem cobrança" : "Total filtrado"}${sel.length && sel.length < FORMAS.length ? ` · ${visiveis.map((f) => f.nome).join(" + ")}` : ""}${r.soma.sem_cobranca ? ` · exceto ${r.soma.sem_cobranca} sem cobrança` : ""}</small><b>${fmtBRL(r.soma.total)}</b></div>`;
 }
 
 const celula = (c, apagada = false) => (c ? `<td class="din${apagada ? " apagada" : ""}">${fmtNum(c)}</td>` : `<td class="din vazio${apagada ? " apagada" : ""}">–</td>`);
@@ -2263,10 +2364,10 @@ function renderTabela(r) {
         </tr></thead>
         <tbody>
           ${r.itens.map((l) => `
-            <tr class="clicavel" data-id="${esc(l.id)}">
+            <tr class="clicavel${semCobranca(l) && S.filtro?.tipo !== "sem_cobranca" ? " linha-sc" : ""}" data-id="${esc(l.id)}">
               <td class="num">${fmtData(l.data)}<span class="dds">${diaSemana(l.data)}</span></td>
               <td class="forn">${esc(l.fornecedor)}${l.obs ? `<span class="obs">${esc(l.obs)}</span>` : ""}</td>
-              <td class="num">${esc(l.nf)}</td>
+              <td class="num">${nfTxt(l)}</td>
               <td class="num">${esc(l.carga) || '<span class="vazio">–</span>'}</td>
               <td>${seloTipo(l.tipo)}</td>
               ${FORMAS.map((f) => celula(l[f.k], sel.length && !sel.includes(f.k))).join("")}
@@ -2411,10 +2512,10 @@ function renderFluxo() {
   $("#dia").value = S.dia;
 
   const ag = zeros(), sa = zeros();
-  let qtd = 0;
+  let qtd = 0, qtdSC = 0;
   for (const d of fx.dias) {
     if (S.dia && d.data !== S.dia) continue;
-    somar(ag, d.agendada); somar(sa, d.sem_agenda); qtd += d.quantidade;
+    somar(ag, d.agendada); somar(sa, d.sem_agenda); qtd += d.quantidade; qtdSC += d.sem_cobranca || 0;
   }
   const tot = somar(somar(zeros(), ag), sa);
   const periodo = S.dia ? `${fmtData(S.dia)} (${diaSemana(S.dia)})` : nomeMes(S.mes);
@@ -2442,6 +2543,7 @@ function renderFluxo() {
         <div class="grande">${fmtBRL(somaObj(tot))}</div>
         <div class="per">${esc(periodo)} · ${qtd.toLocaleString("pt-BR")} ${qtd === 1 ? "lançamento" : "lançamentos"}</div>
         <div class="hero-tipos"><span>Agendadas: <b>${fmtBRL(somaObj(ag))}</b></span><span>Sem agenda: <b>${fmtBRL(somaObj(sa))}</b></span></div>
+        ${qtdSC ? `<a class="hero-sc nao-imprimir" href="#/semcobranca" title="Ver o painel de cargas sem cobrança">${ic("i-nocharge")}${qtdSC} ${qtdSC === 1 ? "carga sem cobrança" : "cargas sem cobrança"} · fora do total${ic("i-right")}</a>` : ""}
         <div class="hero-div">${FORMAS.map((f) => `<div><small>${f.nome}</small><b>${fmtBRL(tot[f.k])}</b></div>`).join("")}</div>
       </div>
     </section>`;
@@ -2497,6 +2599,201 @@ function exportarFluxo() {
   }
   csv += ["TOTAL", n(tot.dinheiro), n(tot.debito), n(tot.credito), n(tot.boleto), n(somaObj(tot))].join(";") + "\r\n";
   baixarArquivo(`fluxo_${S.empresa}_${S.mes}.csv`, "﻿" + csv, "text/csv;charset=utf-8");
+}
+
+/* ---------------------------------------------------------------- página: cargas sem cobrança (painel à parte) */
+
+const seqSC = sequenciador(); // S.sc = { mes, itens, totalCargas }
+
+/** Muda S.mes (compartilhado com o fluxo de caixa) e atualiza o seletor da barra da página. */
+function navegarMes(delta, depois) {
+  const [a, m] = S.mes.split("-").map(Number);
+  const d = new Date(a, m - 1 + delta, 1);
+  S.mes = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  $("#mes").value = S.mes;
+  S.dia = "";
+  depois();
+}
+
+function paginaSemCobranca() {
+  if (!S.mes) S.mes = hojeISO().slice(0, 7);
+  S.diaSC = "";
+  cabecalho(`Cargas sem cobrança <span class="selo s-red">${esc(rotuloEmpresa(S.empresa))}</span>`,
+    "Cargas registradas como <b>sem cobrança</b>. Elas não entram no total das cargas agendadas e sem agenda nem no fluxo de caixa.",
+    `<div class="mes-nav" role="group" aria-label="Mês">
+       <button class="btn-icon" data-mes="-1" title="Mês anterior" aria-label="Mês anterior">${ic("i-left")}</button>
+       <input class="input" type="month" id="mes" value="${S.mes}" aria-label="Mês">
+       <button class="btn-icon" data-mes="1" title="Próximo mês" aria-label="Próximo mês">${ic("i-right")}</button>
+     </div>
+     <button class="btn btn-outline" data-csv>${ic("i-download")}Exportar</button>
+     <a class="btn btn-red" href="#/novo">${ic("i-plus")}Novo lançamento</a>`);
+  $("#main").innerHTML = `
+    <div class="sc-kpis" id="sc-kpis"></div>
+    <div class="sc-grid">
+      <section class="card">
+        <div class="card-h"><h2><span class="barra navy"></span>Cargas sem cobrança por dia</h2><span class="esp"></span><span class="dica">Clique numa barra para ver só o dia</span></div>
+        <div class="card-b" id="sc-dias"></div>
+      </section>
+      <section class="card">
+        <div class="card-h"><h2><span class="barra navy"></span>Por fornecedor / transportador</h2></div>
+        <div class="card-b" id="sc-forn"></div>
+      </section>
+    </div>
+    <section class="card card-lista">
+      <div class="card-h"><h2><span class="barra"></span><span id="sc-tit">Cargas do mês</span></h2><span class="esp"></span>
+        <div class="input-icone sc-busca">${ic("i-search")}<input class="input" type="search" id="sc-q" placeholder="Fornecedor, NFS-e ou carga"></div></div>
+      <div id="sc-lista"></div>
+    </section>`;
+  $("#mes").onchange = (e) => { if (e.target.value) { S.mes = e.target.value; S.dia = ""; S.diaSC = ""; carregarSemCobranca(); } };
+  $$("[data-mes]").forEach((b) => (b.onclick = () => navegarMes(Number(b.dataset.mes), () => { S.diaSC = ""; carregarSemCobranca(); })));
+  $("#sc-q").addEventListener("input", debounce(renderListaSC, 200));
+  $("[data-csv]").onclick = () => exportarLancamentos({ de: `${S.mes}-01`, ate: fimDoMes(S.mes), tipo: "sem_cobranca" }, "data_asc");
+  carregarSemCobranca();
+}
+
+const fimDoMes = (ym) => { const [a, m] = ym.split("-").map(Number); return `${ym}-${String(new Date(a, m, 0).getDate()).padStart(2, "0")}`; };
+
+async function carregarSemCobranca() {
+  const box = $("#sc-kpis");
+  if (!box) return;
+  const atual = seqSC();
+  const mes = S.mes;
+  $("#main").classList.add("carregando");
+  try {
+    const base = { empresa: S.empresa, de: `${mes}-01`, ate: fimDoMes(mes), tipo: "sem_cobranca", tamanho: 500, ordem: "data_desc" };
+    let pagina = 1, itens = [], r;
+    do { // em geral cabe numa página só; busca as demais se passar de 500
+      r = await api("GET", `/api/lancamentos?${new URLSearchParams({ ...base, pagina })}`);
+      itens = itens.concat(r.itens);
+      pagina++;
+    } while (itens.length < r.quantidade && r.itens.length);
+    // total de cargas do mês (cobradas + sem cobrança) para a participação; mesmo documento, sem leitura extra
+    const fx = await api("GET", `/api/fluxo?empresa=${S.empresa}&mes=${mes}`);
+    if (!atual() || !$("#sc-kpis")) return;
+    const cobradas = fx.dias.reduce((a, d) => a + d.quantidade, 0);
+    S.sc = { mes, itens, totalCargas: cobradas + itens.length };
+    renderSemCobranca();
+  } catch (x) {
+    if (atual()) toast(x.message, "erro");
+  } finally {
+    if (atual()) $("#main")?.classList.remove("carregando");
+  }
+}
+
+function renderSemCobranca() {
+  const sc = S.sc;
+  if (!sc || sc.mes !== S.mes || !$("#sc-kpis")) return;
+  const itens = sc.itens;
+  const n = itens.length;
+  const valor = itens.reduce((a, l) => a + l.total, 0);
+  const fornecedores = new Map();
+  itens.forEach((l) => fornecedores.set(l.fornecedor, (fornecedores.get(l.fornecedor) || 0) + 1));
+  const pct = sc.totalCargas ? (n / sc.totalCargas) * 100 : 0;
+  const pctTxt = pct.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + "%";
+
+  $("#sc-kpis").innerHTML = `
+    <div class="card sc-kpi destaque"><small>Cargas sem cobrança</small><b>${n.toLocaleString("pt-BR")}</b><span>${esc(nomeMes(S.mes))}</span></div>
+    <div class="card sc-kpi"><small>Participação nas cargas do mês</small><b>${pctTxt}</b>
+      <span>${n.toLocaleString("pt-BR")} de ${sc.totalCargas.toLocaleString("pt-BR")} cargas lançadas</span>
+      <div class="sc-medidor" role="img" aria-label="${pctTxt} das cargas do mês"><i style="width:${Math.min(100, pct)}%"></i></div></div>
+    <div class="card sc-kpi"><small>Fornecedores / transportadores</small><b>${fornecedores.size.toLocaleString("pt-BR")}</b><span>${fornecedores.size === 1 ? "diferente" : "diferentes"} no mês</span></div>
+    <div class="card sc-kpi"><small>Valor informado</small><b>${fmtBRL(valor)}</b><span>Só para controle · não soma no fluxo</span></div>`;
+
+  // barras por dia (uma série: quantidade de cargas)
+  const [a, m] = S.mes.split("-").map(Number);
+  const nDias = new Date(a, m, 0).getDate();
+  const porDia = {};
+  itens.forEach((l) => (porDia[l.data] = (porDia[l.data] || 0) + 1));
+  const max = Math.max(1, ...Object.values(porDia));
+  const diasCom = Object.keys(porDia).length;
+  let barras = "";
+  for (let d = 1; d <= nDias; d++) {
+    const iso = `${S.mes}-${String(d).padStart(2, "0")}`;
+    const q = porDia[iso] || 0;
+    const dica = `${fmtData(iso)} (${diaSemana(iso)}): ${q} ${q === 1 ? "carga" : "cargas"}`;
+    barras += `<button class="sc-col${S.diaSC === iso ? " sel" : ""}${q ? "" : " zero"}" data-dia="${iso}" ${q ? "" : "disabled"} aria-label="${esc(dica)}" data-dica="${esc(dica)}">
+      <span class="sc-bar" style="height:${q ? Math.max(4, (q / max) * 100) : 0}%">${q === max && q ? `<em>${q}</em>` : ""}</span>
+      <span class="sc-d ${["dom", "sáb"].includes(diaSemana(iso)) ? "fds" : ""}">${d}</span></button>`;
+  }
+  $("#sc-dias").innerHTML = n
+    ? `<div class="sc-chart" role="group" aria-label="Cargas sem cobrança por dia">${barras}<div class="sc-dica hidden" aria-hidden="true"></div></div>
+       <div class="sc-rodape">${diasCom} ${diasCom === 1 ? "dia" : "dias"} com carga sem cobrança · máximo de ${max} num dia</div>`
+    : `<div class="vazio-box">${ic("i-nocharge")}<b>Nenhuma carga sem cobrança em ${esc(nomeMes(S.mes))}</b>Registre em Novo lançamento escolhendo o tipo “Sem cobrança”.</div>`;
+  const chart = $(".sc-chart");
+  if (chart) {
+    const dicaEl = $(".sc-dica", chart);
+    $$(".sc-col:not(.zero)", chart).forEach((b) => {
+      b.onclick = () => { S.diaSC = S.diaSC === b.dataset.dia ? "" : b.dataset.dia; renderSemCobranca(); };
+      const mostrar = () => {
+        dicaEl.textContent = b.dataset.dica;
+        dicaEl.classList.remove("hidden");
+        const x = b.offsetLeft + b.offsetWidth / 2;
+        dicaEl.style.left = Math.min(Math.max(x, dicaEl.offsetWidth / 2), chart.clientWidth - dicaEl.offsetWidth / 2) + "px";
+      };
+      b.onmouseenter = mostrar; b.onfocus = mostrar;
+      b.onmouseleave = b.onblur = () => dicaEl.classList.add("hidden");
+    });
+  }
+
+  // ranking de fornecedores
+  const ranking = [...fornecedores.entries()].sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]));
+  const top = ranking.slice(0, 8);
+  const outros = ranking.slice(8).reduce((acc, [, q]) => acc + q, 0);
+  const maxF = top.length ? top[0][1] : 1;
+  $("#sc-forn").innerHTML = n ? `<ul class="sc-rank">
+      ${top.map(([nome, q]) => `<li title="${esc(nome)}: ${q} ${q === 1 ? "carga" : "cargas"}"><span class="nm">${esc(nome)}</span><span class="trilho"><i style="width:${(q / maxF) * 100}%"></i></span><b>${q}</b></li>`).join("")}
+      ${outros ? `<li class="outros"><span class="nm">Outros ${ranking.length - 8} fornecedores</span><span class="trilho"></span><b>${outros}</b></li>` : ""}
+    </ul>` : `<div class="vazio-box">${ic("i-truck")}<b>Sem dados no mês</b></div>`;
+
+  renderListaSC();
+}
+
+function renderListaSC() {
+  const sc = S.sc;
+  const box = $("#sc-lista");
+  if (!sc || !box) return;
+  const busca = ($("#sc-q")?.value || "").trim().toUpperCase();
+  const lista = sc.itens.filter((l) => (!S.diaSC || l.data === S.diaSC)
+    && (!busca || l.fornecedor.includes(busca) || (l.nf || "").includes(busca) || (l.carga || "").includes(busca)));
+  $("#sc-tit").innerHTML = S.diaSC
+    ? `Cargas de ${fmtData(S.diaSC)} (${diaSemana(S.diaSC)}) <button class="filtro-dia-x" data-limpar-dia title="Voltar ao mês inteiro" aria-label="Voltar ao mês inteiro">${ic("i-x")}</button>`
+    : `Cargas de ${esc(nomeMes(S.mes))}`;
+  $("[data-limpar-dia]")?.addEventListener("click", () => { S.diaSC = ""; renderSemCobranca(); });
+  if (!lista.length) {
+    box.innerHTML = sc.itens.length ? `<div class="vazio-box">${ic("i-search")}<b>Nenhuma carga encontrada</b>Ajuste a busca.</div>` : "";
+    return;
+  }
+  const admin = S.usuario.admin;
+  box.innerHTML = `
+    <div class="tabela-box rolagem">
+      <table class="t">
+        <thead><tr><th>Data</th><th class="quebra">Fornecedor / Transportador</th><th>NFS-e/RPS</th><th>Carga</th><th class="r">Valor informado</th><th>Lançado por</th><th class="c">Ações</th></tr></thead>
+        <tbody>
+          ${lista.map((l) => `
+            <tr class="clicavel" data-id="${esc(l.id)}">
+              <td class="num">${fmtData(l.data)}<span class="dds">${diaSemana(l.data)}</span></td>
+              <td class="forn">${esc(l.fornecedor)}${l.obs ? `<span class="obs">${esc(l.obs)}</span>` : ""}</td>
+              <td class="num">${nfTxt(l)}</td>
+              <td class="num">${esc(l.carga) || '<span class="vazio">–</span>'}</td>
+              ${celula(l.total)}
+              <td>${esc(l.criado_por) || '<span class="vazio">–</span>'}</td>
+              <td class="c"><span class="acoes-linha">
+                <button class="btn-icon" data-edit title="Editar" aria-label="Editar">${ic("i-edit")}</button>
+                ${admin ? `<button class="btn-icon danger" data-del title="Excluir" aria-label="Excluir">${ic("i-trash")}</button>` : ""}
+              </span></td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+    <div class="paginacao"><span>${lista.length.toLocaleString("pt-BR")} ${lista.length === 1 ? "carga" : "cargas"}${lista.length !== sc.itens.length ? ` de ${sc.itens.length.toLocaleString("pt-BR")} no mês` : ""}</span></div>`;
+  ajustarRolagem(box);
+  const porId = Object.fromEntries(lista.map((l) => [String(l.id), l]));
+  $$("tbody tr", box).forEach((tr) => {
+    const l = porId[tr.dataset.id];
+    tr.onclick = (e) => { if (!e.target.closest("[data-del]")) abrirEdicao(l, carregarSemCobranca); };
+    const del = $("[data-del]", tr);
+    if (del) del.onclick = () => excluirLancamento(l, carregarSemCobranca);
+  });
 }
 
 /* ---------------------------------------------------------------- página: usuários (admin) */
