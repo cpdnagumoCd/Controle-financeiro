@@ -497,6 +497,9 @@ table.t { width: 100%; border-collapse: separate; border-spacing: 0; }
 
 /* ---------------------------------------------------------------- cargas sem cobrança */
 .flanc .c4 { grid-column: span 4; }
+/* formulário estreito (ex.: gaveta de edição): o tipo da carga ocupa a linha inteira e o "Quitado" desce, sem sobrepor */
+.flanc { container-type: inline-size; }
+@container (max-width: 780px) { .flanc .c4 { grid-column: 1 / -1; } }
 .seg button.on.gray { background: var(--ink-2); }
 .aviso-sc { display: none; background: var(--navy-50); color: var(--ink-2); border: 1px dashed var(--navy-200); border-radius: 9px; padding: 9px 12px; gap: 8px; align-items: flex-start; font-size: 13px; }
 .aviso-sc svg { color: var(--navy); margin-top: 1px; }
@@ -2041,8 +2044,7 @@ function criarFormLancamento(host, opts = {}) {
     btn.disabled = true;
     try {
       const l = item ? await api("PUT", `/api/lancamentos/${item.id}`, corpo) : await api("POST", "/api/lancamentos", corpo);
-      // "sem cobrança" não fica memorizado: o próximo lançamento volta ao tipo anterior (evita lançar cargas cobradas fora do fluxo por engano)
-      if (!sc) S.ultimoTipo = st.tipo;
+      S.ultimoTipo = st.tipo; // o tipo escolhido (inclusive "sem cobrança") continua marcado até o usuário trocar
       S.ultimasFormas = [...st.formas];
       if (item) toast("Lançamento atualizado.");
       else {
